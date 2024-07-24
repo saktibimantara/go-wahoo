@@ -1,6 +1,7 @@
 package go_wahoo
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -34,4 +35,27 @@ func TestWahoo_GetAuthenticateURL(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestWahoo_GetAccessToken(t *testing.T) {
+
+	c := NewWahoo("aaa", "bbb").SetRedirectURI("ccc.com").SetScopes(Email, UserRead, WorkoutsRead)
+
+	token, err := c.GetAccessToken("V9eugS4YlZhShFyRZSSGjtRsGSyPzcGGZHRB2Ip4HIA")
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+
+	if token == nil {
+		t.Error("Token is nil")
+		t.Fail()
+		return
+	}
+
+	fmt.Println("AccessToken", token.GetAccessToken())
+	fmt.Println("RefreshToken", token.GetRefreshToken())
+	fmt.Println("ExpiresIn", token.GetExpiresAt())
+	fmt.Println("Scope", token.GetScope())
+	fmt.Println("CreatedAt", token.GetCreatedAt())
 }

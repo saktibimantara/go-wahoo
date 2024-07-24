@@ -71,31 +71,35 @@ func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	return &authenticateURL, nil
 }
 
-func (w *Wahoo) GetAccessToken(code string) (*string, error) {
+func (w *Wahoo) GetAccessToken(code string) (*TokenResponse, *RequestError) {
 	if err := w.validateAuthenticate(); err != nil {
-		return nil, err
+		return nil, NewError(err, 400, "failed to validate authenticate")
 	}
 
 	if code == "" {
-		return nil, errors.New("code is required")
+		return nil, NewError(errors.New("code is required"), 400, "code is required")
 	}
 
 	// buildAccessTokenURL
 	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), code)
 
 	// request to get access token
-	resp, err := w.goHttp.Get(accessTokenURL)
+	resp, err := w.goHttp.Post(accessTokenURL, nil)
 	if err != nil {
-		return nil, err
+		return nil, NewError(err, 500, "failed to get access token")
 	}
+
+	respMessage := string(resp.Data)
 
 	if resp.Code != 200 {
-		return nil, ErrFailedToGetAccessToken
+		return nil, NewError(ErrFailedToGetAccessToken, resp.Code, respMessage)
 	}
 
-	respStr := string(resp.Data)
+	if resp.Data == nil {
+		return nil, NewError(ErrFailedToGetAccessToken, 500, "failed to get access token")
+	}
 
-	return &respStr, nil
+	return UnmarshalToResponse(resp.Data)
 }
 
 func (w *Wahoo) validateAuthenticate() error {
