@@ -70,7 +70,7 @@ func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	}
 
 	// buildAuthenticateURL
-	authenticateURL := fmt.Sprintf("%s?%s&%s&%s", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam())
+	authenticateURL := fmt.Sprintf("%s/oauth/authorize?%s&%s&%s&response_type=code", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam())
 
 	return &authenticateURL, nil
 }
