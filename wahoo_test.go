@@ -6,7 +6,7 @@ import (
 
 func TestWahoo_GetAuthenticateURL(t *testing.T) {
 
-	iface := NewWahoo("wwwwwww", "aaa").SetScopes(Email, UserRead, WorkoutsRead).SetRedirectURI("http://localhost:8080")
+	iface := NewWahoo("aaa", "bbb").SetScopes(Email, UserRead, WorkoutsRead).SetRedirectURI("ccc.com")
 
 	tests := []struct {
 		name    string
@@ -18,7 +18,7 @@ func TestWahoo_GetAuthenticateURL(t *testing.T) {
 			name:    "Test Case 1",
 			want:    nil,
 			wahoo:   iface,
-			wantURL: "https://api.wahooligan.com?client_id=wwwwwww&client_secret=aaa&scopes=email%20user_read%20workouts_read&redirect_uri=http://localhost:8080",
+			wantURL: "https://api.wahooligan.com/oauth/authorize?client_id=aaa&client_secret=bbb&scopes=email%20user_read%20workouts_read&redirect_uri=ccc.com&response_type=code",
 		},
 	}
 	for _, tt := range tests {
