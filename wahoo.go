@@ -60,10 +60,6 @@ func (w *Wahoo) SetScopes(scopes ...OAuth2Scope) *Wahoo {
 	return w
 }
 
-type IWahoo interface {
-	GetAuthenticateURL() (*string, error)
-}
-
 func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	if err := w.validateAuthenticate(); err != nil {
 		return nil, err
@@ -75,21 +71,48 @@ func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	return &authenticateURL, nil
 }
 
+func (w *Wahoo) GetAccessToken(code string) (*string, error) {
+	if err := w.validateAuthenticate(); err != nil {
+		return nil, err
+	}
+
+	if code == "" {
+		return nil, errors.New("code is required")
+	}
+
+	// buildAccessTokenURL
+	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), code)
+
+	// request to get access token
+	resp, err := w.goHttp.Get(accessTokenURL)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.Code != 200 {
+		return nil, ErrFailedToGetAccessToken
+	}
+
+	respStr := string(resp.Data)
+
+	return &respStr, nil
+}
+
 func (w *Wahoo) validateAuthenticate() error {
 	if w.redirectURL == "" {
-		return errors.New("redirect url is required")
+		return ErrInvalidRedirectURI
 	}
 
 	if len(w.scopes) == 0 {
-		return errors.New("scopes is required")
+		return ErrInvalidScopes
 	}
 
 	if w.clientId == "" {
-		return errors.New("client id is required")
+		return ErrInvalidClientID
 	}
 
 	if w.clientSecret == "" {
-		return errors.New("client secret is required")
+		return ErrInvalidClientSecret
 	}
 
 	return nil
