@@ -1,6 +1,7 @@
-package go_wahoo
+package tests
 
 import (
+	"github.com/saktibimantara/go-wahoo"
 	"reflect"
 	"testing"
 )
@@ -12,7 +13,7 @@ func TestUnmarshalToResponse(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *TokenResponse
+		want    *go_wahoo.TokenResponse
 		wantErr bool
 	}{
 		{
@@ -27,7 +28,7 @@ func TestUnmarshalToResponse(t *testing.T) {
   "created_at": 1721808795
 }`,
 			},
-			want: &TokenResponse{
+			want: &go_wahoo.TokenResponse{
 				AccessToken:  "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
 				TokenType:    "Bearer",
 				ExpiresIn:    7199,
@@ -42,7 +43,7 @@ func TestUnmarshalToResponse(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			data := []byte(tt.args.data)
 
-			got, err := UnmarshalToResponse(data)
+			got, err := go_wahoo.UnmarshalToResponse(data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("UnmarshalToResponse() error = %v, wantErr %v", err, tt.wantErr)
 				return

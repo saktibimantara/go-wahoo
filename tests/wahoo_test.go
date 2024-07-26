@@ -1,17 +1,19 @@
-package go_wahoo
+package tests
 
 import (
 	"fmt"
+	"github.com/saktibimantara/go-wahoo"
+	"github.com/saktibimantara/go-wahoo/mocks"
 	"testing"
 )
 
 func TestWahoo_GetAuthenticateURL(t *testing.T) {
 
-	iface := NewWahoo("aaa", "bbb").SetScopes(Email, UserRead, WorkoutsRead).SetRedirectURI("ccc.com")
+	iface := go_wahoo.NewWahoo("aaa", "bbb").SetScopes(go_wahoo.Email, go_wahoo.UserRead, go_wahoo.WorkoutsRead).SetRedirectURI("ccc.com")
 
 	tests := []struct {
 		name    string
-		wahoo   IWahoo
+		wahoo   go_wahoo.IWahoo
 		want    *string
 		wantURL string
 	}{
@@ -39,9 +41,24 @@ func TestWahoo_GetAuthenticateURL(t *testing.T) {
 
 func TestWahoo_GetAccessToken(t *testing.T) {
 
-	c := NewWahoo("aaa", "bbb").SetRedirectURI("ccc.com").SetScopes(Email, UserRead, WorkoutsRead)
+	w := mocks.IWahoo{}
 
-	token, err := c.GetAccessToken("V9eugS4YlZhShFyRZSSGjtRsGSyPzcGGZHRB2Ip4HIA")
+	w.On("GetAccessToken", "abcdfsd").Return(&go_wahoo.TokenResponse{
+		"9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
+		"Bearer",
+		7199,
+		"yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
+		"user_read",
+		1721808795,
+	}, nil)
+
+	w.On("GetAccessToken", "badCode").Return(nil, &go_wahoo.RequestError{
+		Err:   go_wahoo.ErrFailedToGetAccessToken,
+		Code:  400,
+		Debug: "Failed to get access token",
+	})
+
+	token, err := w.GetAccessToken("abcdfsd")
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
@@ -53,9 +70,9 @@ func TestWahoo_GetAccessToken(t *testing.T) {
 		return
 	}
 
-	fmt.Println("AccessToken", token.GetAccessToken())
-	fmt.Println("RefreshToken", token.GetRefreshToken())
-	fmt.Println("ExpiresIn", token.GetExpiresAt())
-	fmt.Println("Scope", token.GetScope())
-	fmt.Println("CreatedAt", token.GetCreatedAt())
+	if token.GetAccessToken() != "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw" {
+		t.Error("Access token is not valid")
+		t.Fail()
+		return
+	}
 }
