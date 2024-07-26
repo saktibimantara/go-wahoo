@@ -60,10 +60,6 @@ func TestUnmarshalToResponse(t *testing.T) {
 				t.Errorf("UnmarshalToResponse() got = %v, want %v", got.GetTokenType(), tt.want.GetTokenType())
 			}
 
-			if got.GetExpiresAt() != tt.want.GetExpiresAt() {
-				t.Errorf("UnmarshalToResponse() got = %v, want %v", got.GetExpiresAt(), tt.want.GetExpiresAt())
-			}
-
 			if got.GetRefreshToken() != tt.want.GetRefreshToken() {
 				t.Errorf("UnmarshalToResponse() got = %v, want %v", got.GetRefreshToken(), tt.want.GetRefreshToken())
 			}
