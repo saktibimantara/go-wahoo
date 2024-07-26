@@ -42,7 +42,10 @@ func NewWahoo(clientId, clientSecret string) *Wahoo {
 		clientSecret: clientSecret,
 	}
 
-	goHttp := go_http.New(&go_http.Config{BaseURL: wh.baseURL})
+	header := go_http.Header{}
+	header["Content-Type"] = "application/json"
+
+	goHttp := go_http.New(&go_http.Config{BaseURL: wh.baseURL, Header: header})
 	wh.goHttp = goHttp
 
 	return &wh
@@ -60,10 +63,6 @@ func (w *Wahoo) SetScopes(scopes ...OAuth2Scope) *Wahoo {
 	return w
 }
 
-type IWahoo interface {
-	GetAuthenticateURL() (*string, error)
-}
-
 func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	if err := w.validateAuthenticate(); err != nil {
 		return nil, err
@@ -75,21 +74,108 @@ func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 	return &authenticateURL, nil
 }
 
-func (w *Wahoo) validateAuthenticate() error {
-	if w.redirectURL == "" {
-		return errors.New("redirect url is required")
+func (w *Wahoo) GetAccessToken(code string) (*TokenResponse, *RequestError) {
+	if err := w.validateAccessTokenRequest(code); err != nil {
+		return nil, NewError(err, 400, "Invalid Request")
 	}
 
-	if len(w.scopes) == 0 {
-		return errors.New("scopes is required")
+	// buildAccessTokenURL
+	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), code)
+
+	// request to get access token
+	resp, err := w.goHttp.Post(accessTokenURL, nil)
+	if err != nil {
+		return nil, NewError(err, 500, "failed to get access token")
+	}
+
+	respMessage := string(resp.Data)
+
+	if resp.Code != 200 {
+		return nil, NewError(ErrFailedToGetAccessToken, resp.Code, respMessage)
+	}
+
+	if resp.Data == nil {
+		return nil, NewError(ErrFailedToGetAccessToken, 500, "failed to get access token")
+	}
+
+	return UnmarshalToResponse(resp.Data)
+}
+
+func (w *Wahoo) RefreshToken(refreshToken string) (*TokenResponse, *RequestError) {
+	if err := w.validateRefreshTokenRequest(refreshToken); err != nil {
+		return nil, NewError(err, 400, "Invalid Request")
+	}
+
+	// buildAccessTokenURL
+	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), refreshToken)
+
+	// request to get access token
+	resp, err := w.goHttp.Post(refreshTokenURL, nil)
+	if err != nil {
+		return nil, NewError(err, 500, "failed to get access token")
+	}
+
+	respMessage := string(resp.Data)
+
+	if resp.Code != 200 {
+		return nil, NewError(ErrFailedToGetAccessToken, resp.Code, respMessage)
+	}
+
+	if resp.Data == nil {
+		return nil, NewError(ErrFailedToGetAccessToken, 500, "failed to get access token")
+	}
+
+	return UnmarshalToResponse(resp.Data)
+
+}
+
+func (w *Wahoo) validateAccessTokenRequest(code string) error {
+	if code == "" {
+		return errors.New("code is required")
 	}
 
 	if w.clientId == "" {
-		return errors.New("client id is required")
+		return ErrInvalidClientID
 	}
 
 	if w.clientSecret == "" {
-		return errors.New("client secret is required")
+		return ErrInvalidClientSecret
+	}
+
+	return nil
+}
+
+func (w *Wahoo) validateAuthenticate() error {
+	if w.redirectURL == "" {
+		return ErrInvalidRedirectURI
+	}
+
+	if len(w.scopes) == 0 {
+		return ErrInvalidScopes
+	}
+
+	if w.clientId == "" {
+		return ErrInvalidClientID
+	}
+
+	if w.clientSecret == "" {
+		return ErrInvalidClientSecret
+	}
+
+	return nil
+}
+
+func (w *Wahoo) validateRefreshTokenRequest(refreshToken string) error {
+	if refreshToken == "" {
+		return ErrInvalidRefreshToken
+	}
+
+	if w.clientId == "" {
+		return ErrInvalidClientID
+	}
+
+	if w.clientSecret == "" {
+		return ErrInvalidClientSecret
 	}
 
 	return nil
