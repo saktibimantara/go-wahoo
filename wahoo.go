@@ -75,12 +75,8 @@ func (w *Wahoo) GetAuthenticateURL() (*string, error) {
 }
 
 func (w *Wahoo) GetAccessToken(code string) (*TokenResponse, *RequestError) {
-	if err := w.validateAuthenticate(); err != nil {
-		return nil, NewError(err, 400, "failed to validate authenticate")
-	}
-
-	if code == "" {
-		return nil, NewError(errors.New("code is required"), 400, "code is required")
+	if err := w.validateAccessTokenRequest(code); err != nil {
+		return nil, NewError(err, 400, "Invalid Request")
 	}
 
 	// buildAccessTokenURL
@@ -131,6 +127,22 @@ func (w *Wahoo) RefreshToken(refreshToken string) (*TokenResponse, *RequestError
 
 	return UnmarshalToResponse(resp.Data)
 
+}
+
+func (w *Wahoo) validateAccessTokenRequest(code string) error {
+	if code == "" {
+		return errors.New("code is required")
+	}
+
+	if w.clientId == "" {
+		return ErrInvalidClientID
+	}
+
+	if w.clientSecret == "" {
+		return ErrInvalidClientSecret
+	}
+
+	return nil
 }
 
 func (w *Wahoo) validateAuthenticate() error {
