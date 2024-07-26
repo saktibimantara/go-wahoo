@@ -74,6 +74,38 @@ func (_m *IWahoo) GetAuthenticateURL() (*string, error) {
 	return r0, r1
 }
 
+// RefreshToken provides a mock function with given fields: refreshToken
+func (_m *IWahoo) RefreshToken(refreshToken string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError) {
+	ret := _m.Called(refreshToken)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RefreshToken")
+	}
+
+	var r0 *go_wahoo.TokenResponse
+	var r1 *go_wahoo.RequestError
+	if rf, ok := ret.Get(0).(func(string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError)); ok {
+		return rf(refreshToken)
+	}
+	if rf, ok := ret.Get(0).(func(string) *go_wahoo.TokenResponse); ok {
+		r0 = rf(refreshToken)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*go_wahoo.TokenResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string) *go_wahoo.RequestError); ok {
+		r1 = rf(refreshToken)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*go_wahoo.RequestError)
+		}
+	}
+
+	return r0, r1
+}
+
 // NewIWahoo creates a new instance of IWahoo. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewIWahoo(t interface {

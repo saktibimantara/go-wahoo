@@ -22,4 +22,5 @@ var (
 	ErrInvalidClientID        = errors.New("client id is required")
 	ErrInvalidClientSecret    = errors.New("client secret is required")
 	ErrFailedToGetAccessToken = errors.New("failed to get access token")
+	ErrInvalidRefreshToken    = errors.New("invalid refresh token")
 )

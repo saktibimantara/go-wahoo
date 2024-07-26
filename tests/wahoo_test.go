@@ -76,3 +76,53 @@ func TestWahoo_GetAccessToken(t *testing.T) {
 		return
 	}
 }
+
+func TestWahoo_GetRefreshToken(t *testing.T) {
+
+	w := mocks.IWahoo{}
+
+	w.On("RefreshToken", "refresh_001").Return(&go_wahoo.TokenResponse{
+		"9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
+		"Bearer",
+		7199,
+		"yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
+		"user_read",
+		1721808795,
+	}, nil)
+
+	w.On("RefreshToken", "badRefreshToken").Return(nil, &go_wahoo.RequestError{
+		Err: go_wahoo.ErrFailedToGetAccessToken,
+	})
+
+	refreshToken, err := w.RefreshToken("refresh_001")
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+
+	if refreshToken == nil {
+		t.Error("Token is nil")
+		t.Fail()
+		return
+	}
+
+	if refreshToken.GetAccessToken() != "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw" {
+		t.Error("Access token is not valid")
+		t.Fail()
+		return
+	}
+
+	if refreshToken.GetRefreshToken() !=
+		"yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg" {
+		t.Error("Refresh token is not valid")
+		t.Fail()
+		return
+	}
+
+	if refreshToken.GetScope() != "user_read" {
+		t.Error("Scope is not valid")
+		t.Fail()
+		return
+	}
+
+}
