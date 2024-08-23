@@ -44,7 +44,7 @@ func TestUnmarshalToResponse(t *testing.T) {
 			data := []byte(tt.args.data)
 
 			got, err := go_wahoo.UnmarshalToResponse(data)
-			if (err != nil) != tt.wantErr {
+			if err != nil {
 				t.Errorf("UnmarshalToResponse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}

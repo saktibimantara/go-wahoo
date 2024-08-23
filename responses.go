@@ -6,12 +6,12 @@ import (
 )
 
 type TokenResponse struct {
-	AccessToken  string `json:"accessToken"`
-	TokenType    string `json:"tokenType"`
-	ExpiresIn    int    `json:"expiresIn"`
-	RefreshToken string `json:"refreshToken"`
+	AccessToken  string `json:"access_token"`
+	TokenType    string `json:"token_type"`
+	ExpiresIn    int    `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
 	Scope        string `json:"scope"`
-	CreatedAt    int64  `json:"createdAt"`
+	CreatedAt    int64  `json:"created_at"`
 }
 
 type WorkoutsResponse struct {
