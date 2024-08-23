@@ -26,7 +26,7 @@ jobs:
             version: latest
             github_token: ${{ secrets.GITHUB_TOKEN }}
             only-new-issues: true
-            args: "run ./... --fix"
+            args: "--fix"
 
       - name: Test
         run: go test -v ./...
