@@ -12,9 +12,9 @@ type IWahoo struct {
 	mock.Mock
 }
 
-// GetAccessToken provides a mock function with given fields: code
-func (_m *IWahoo) GetAccessToken(code string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError) {
-	ret := _m.Called(code)
+// GetAccessToken provides a mock function with given fields: code, uniqueCode
+func (_m *IWahoo) GetAccessToken(code string, uniqueCode string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError) {
+	ret := _m.Called(code, uniqueCode)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAccessToken")
@@ -22,19 +22,19 @@ func (_m *IWahoo) GetAccessToken(code string) (*go_wahoo.TokenResponse, *go_waho
 
 	var r0 *go_wahoo.TokenResponse
 	var r1 *go_wahoo.RequestError
-	if rf, ok := ret.Get(0).(func(string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError)); ok {
-		return rf(code)
+	if rf, ok := ret.Get(0).(func(string, string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError)); ok {
+		return rf(code, uniqueCode)
 	}
-	if rf, ok := ret.Get(0).(func(string) *go_wahoo.TokenResponse); ok {
-		r0 = rf(code)
+	if rf, ok := ret.Get(0).(func(string, string) *go_wahoo.TokenResponse); ok {
+		r0 = rf(code, uniqueCode)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*go_wahoo.TokenResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string) *go_wahoo.RequestError); ok {
-		r1 = rf(code)
+	if rf, ok := ret.Get(1).(func(string, string) *go_wahoo.RequestError); ok {
+		r1 = rf(code, uniqueCode)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(*go_wahoo.RequestError)
@@ -44,9 +44,41 @@ func (_m *IWahoo) GetAccessToken(code string) (*go_wahoo.TokenResponse, *go_waho
 	return r0, r1
 }
 
-// GetAuthenticateURL provides a mock function with given fields:
-func (_m *IWahoo) GetAuthenticateURL() (*string, error) {
-	ret := _m.Called()
+// GetAllWorkout provides a mock function with given fields: token, page, limit
+func (_m *IWahoo) GetAllWorkout(token string, page int, limit int) (*go_wahoo.WorkoutsResponse, *go_wahoo.RequestError) {
+	ret := _m.Called(token, page, limit)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetAllWorkout")
+	}
+
+	var r0 *go_wahoo.WorkoutsResponse
+	var r1 *go_wahoo.RequestError
+	if rf, ok := ret.Get(0).(func(string, int, int) (*go_wahoo.WorkoutsResponse, *go_wahoo.RequestError)); ok {
+		return rf(token, page, limit)
+	}
+	if rf, ok := ret.Get(0).(func(string, int, int) *go_wahoo.WorkoutsResponse); ok {
+		r0 = rf(token, page, limit)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*go_wahoo.WorkoutsResponse)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(string, int, int) *go_wahoo.RequestError); ok {
+		r1 = rf(token, page, limit)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*go_wahoo.RequestError)
+		}
+	}
+
+	return r0, r1
+}
+
+// GetAuthenticateURL provides a mock function with given fields: uniqueCode
+func (_m *IWahoo) GetAuthenticateURL(uniqueCode string) (*string, error) {
+	ret := _m.Called(uniqueCode)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetAuthenticateURL")
@@ -54,19 +86,19 @@ func (_m *IWahoo) GetAuthenticateURL() (*string, error) {
 
 	var r0 *string
 	var r1 error
-	if rf, ok := ret.Get(0).(func() (*string, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(string) (*string, error)); ok {
+		return rf(uniqueCode)
 	}
-	if rf, ok := ret.Get(0).(func() *string); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(string) *string); ok {
+		r0 = rf(uniqueCode)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*string)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(uniqueCode)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -74,9 +106,9 @@ func (_m *IWahoo) GetAuthenticateURL() (*string, error) {
 	return r0, r1
 }
 
-// RefreshToken provides a mock function with given fields: refreshToken
-func (_m *IWahoo) RefreshToken(refreshToken string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError) {
-	ret := _m.Called(refreshToken)
+// RefreshToken provides a mock function with given fields: refreshToken, uniqueCode
+func (_m *IWahoo) RefreshToken(refreshToken string, uniqueCode string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError) {
+	ret := _m.Called(refreshToken, uniqueCode)
 
 	if len(ret) == 0 {
 		panic("no return value specified for RefreshToken")
@@ -84,19 +116,19 @@ func (_m *IWahoo) RefreshToken(refreshToken string) (*go_wahoo.TokenResponse, *g
 
 	var r0 *go_wahoo.TokenResponse
 	var r1 *go_wahoo.RequestError
-	if rf, ok := ret.Get(0).(func(string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError)); ok {
-		return rf(refreshToken)
+	if rf, ok := ret.Get(0).(func(string, string) (*go_wahoo.TokenResponse, *go_wahoo.RequestError)); ok {
+		return rf(refreshToken, uniqueCode)
 	}
-	if rf, ok := ret.Get(0).(func(string) *go_wahoo.TokenResponse); ok {
-		r0 = rf(refreshToken)
+	if rf, ok := ret.Get(0).(func(string, string) *go_wahoo.TokenResponse); ok {
+		r0 = rf(refreshToken, uniqueCode)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*go_wahoo.TokenResponse)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string) *go_wahoo.RequestError); ok {
-		r1 = rf(refreshToken)
+	if rf, ok := ret.Get(1).(func(string, string) *go_wahoo.RequestError); ok {
+		r1 = rf(refreshToken, uniqueCode)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(*go_wahoo.RequestError)
