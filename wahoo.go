@@ -75,18 +75,18 @@ func (w *Wahoo) GetAuthenticateURL(uniqueCode string) (*string, error) {
 	}
 
 	// buildAuthenticateURL
-	authenticateURL := fmt.Sprintf("%s/oauth/authorize?%s&%s&%s?unique_code=%s&response_type=code", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam(), uniqueCode)
+	authenticateURL := fmt.Sprintf("%s/oauth/authorize?%s&%s&%s&response_type=code", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam(uniqueCode))
 
 	return &authenticateURL, nil
 }
 
-func (w *Wahoo) GetAccessToken(code string) (*TokenResponse, *RequestError) {
+func (w *Wahoo) GetAccessToken(code, uniqueCode string) (*TokenResponse, *RequestError) {
 	if err := w.validateAccessTokenRequest(code); err != nil {
 		return nil, NewError(err, 400, "Invalid Request")
 	}
 
 	// buildAccessTokenURL
-	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), code)
+	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), code)
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(accessTokenURL, nil)
@@ -107,13 +107,13 @@ func (w *Wahoo) GetAccessToken(code string) (*TokenResponse, *RequestError) {
 	return UnmarshalToResponse(resp.Data)
 }
 
-func (w *Wahoo) RefreshToken(refreshToken string) (*TokenResponse, *RequestError) {
+func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *RequestError) {
 	if err := w.validateRefreshTokenRequest(refreshToken); err != nil {
 		return nil, NewError(err, 400, "Invalid Request")
 	}
 
 	// buildAccessTokenURL
-	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(), refreshToken)
+	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), refreshToken)
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(refreshTokenURL, nil)
@@ -190,8 +190,8 @@ func (w *Wahoo) getClientParams() string {
 	return fmt.Sprintf("client_id=%s&client_secret=%s", w.clientID, w.clientSecret)
 }
 
-func (w *Wahoo) getRedirectParam() string {
-	return "redirect_uri=" + w.redirectURL
+func (w *Wahoo) getRedirectParam(uniqueCode string) string {
+	return "redirect_uri=" + w.redirectURL + "?unique_code=" + uniqueCode
 }
 
 func (w *Wahoo) getScopeParam() string {
