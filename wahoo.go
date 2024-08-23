@@ -68,13 +68,14 @@ func (w *Wahoo) SetScopes(scopes ...OAuth2Scope) *Wahoo {
 	return w
 }
 
-func (w *Wahoo) GetAuthenticateURL() (*string, error) {
+// GetAuthenticateURL UniqueCode is a string to represent who is the requester
+func (w *Wahoo) GetAuthenticateURL(uniqueCode string) (*string, error) {
 	if err := w.validateAuthenticate(); err != nil {
 		return nil, err
 	}
 
 	// buildAuthenticateURL
-	authenticateURL := fmt.Sprintf("%s/oauth/authorize?%s&%s&%s&response_type=code", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam())
+	authenticateURL := fmt.Sprintf("%s/oauth/authorize?%s&%s&%s?unique_code=%s&response_type=code", w.baseURL, w.getClientParams(), w.getScopeParam(), w.getRedirectParam(), uniqueCode)
 
 	return &authenticateURL, nil
 }
