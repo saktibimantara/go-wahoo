@@ -43,7 +43,7 @@ func TestWahoo_GetAccessToken(t *testing.T) {
 
 	w := mocks.IWahoo{}
 
-	w.On("GetAccessToken", "abcdfsd").Return(&go_wahoo.TokenResponse{
+	w.On("GetAccessToken", "abcdfsd", "123").Return(&go_wahoo.TokenResponse{
 		AccessToken:  "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
 		TokenType:    "Bearer",
 		ExpiresIn:    7199,
@@ -58,7 +58,7 @@ func TestWahoo_GetAccessToken(t *testing.T) {
 		Debug: "Failed to get access token",
 	})
 
-	token, err := w.GetAccessToken("abcdfsd")
+	token, err := w.GetAccessToken("abcdfsd", "123")
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
@@ -81,7 +81,7 @@ func TestWahoo_GetRefreshToken(t *testing.T) {
 
 	w := mocks.IWahoo{}
 
-	w.On("RefreshToken", "refresh_001").Return(&go_wahoo.TokenResponse{
+	w.On("RefreshToken", "refresh_001", "1234").Return(&go_wahoo.TokenResponse{
 		AccessToken:  "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
 		TokenType:    "Bearer",
 		ExpiresIn:    7199,
@@ -94,7 +94,7 @@ func TestWahoo_GetRefreshToken(t *testing.T) {
 		Err: go_wahoo.ErrFailedToGetAccessToken,
 	})
 
-	refreshToken, err := w.RefreshToken("refresh_001")
+	refreshToken, err := w.RefreshToken("refresh_001", "1234")
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
