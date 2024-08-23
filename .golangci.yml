@@ -1,0 +1,76 @@
+# Options for analysis running.
+run:
+  # See the dedicated "run" documentation section.
+  concurrency: 1
+  timeout: 2m
+  issues-exit-code: 5
+  tests: false
+# output configuration options
+output:
+  formats:
+    - format: colored-line-number
+  show-stats: true
+  # See the dedicated "output" documentation section.
+# All available settings of specific linters.
+linters-settings:
+  # See the dedicated "linters-settings" documentation section.
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix("github.com/saktibimantara")
+      - blank
+      - dot
+      - alias
+      - localmodule
+  revive:
+    rules:
+      - name: 'var-naming'
+        arguments:
+          - []
+          - []
+          - - skipPackageNameChecks: true
+
+
+linters:
+  enable:
+    - asasalint
+    - asciicheck
+    - bodyclose
+    - copyloopvar
+    - cyclop
+    - decorder
+    - dogsled
+    - dupl
+    - durationcheck
+    - err113
+    - errorlint
+    - exhaustive
+    - fatcontext
+    - funlen
+    - gci
+    - ginkgolinter
+    - gocheckcompilerdirectives
+    - goconst
+    - gocritic
+    - gocyclo
+    - goimports
+    - gosec
+    - maintidx
+    - misspell
+    - nestif
+    - nilnil
+    - nlreturn
+    - perfsprint
+    - predeclared
+    - reassign
+    - revive
+    - tenv
+    - unconvert
+    - whitespace
+    - wsl
+  # See the dedicated "linters" documentation section.
+issues:
+  # See the dedicated "issues" documentation section.
+severity:
+  # See the dedicated "severity" documentation section.

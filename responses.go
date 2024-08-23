@@ -6,12 +6,12 @@ import (
 )
 
 type TokenResponse struct {
-	AccessToken  string `json:"access_token"`
-	TokenType    string `json:"token_type"`
-	ExpiresIn    int    `json:"expires_in"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	TokenType    string `json:"tokenType"`
+	ExpiresIn    int    `json:"expiresIn"`
+	RefreshToken string `json:"refreshToken"`
 	Scope        string `json:"scope"`
-	CreatedAt    int64  `json:"created_at"`
+	CreatedAt    int64  `json:"createdAt"`
 }
 
 type ITokenResponse interface {
@@ -59,5 +59,5 @@ func (t TokenResponse) GetScope() string {
 }
 
 func (t TokenResponse) GetCreatedAt() time.Time {
-	return time.Unix(int64(t.CreatedAt), 0)
+	return time.Unix(t.CreatedAt, 0)
 }
