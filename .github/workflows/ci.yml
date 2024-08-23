@@ -2,8 +2,7 @@ name: Build and Test
 
 on:
   push:
-    branches:
-      - setup-golangci
+    workflow-dispatch:
 
 
 jobs:
