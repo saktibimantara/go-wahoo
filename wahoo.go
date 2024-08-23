@@ -46,6 +46,16 @@ func NewWahoo(clientID, clientSecret string) *Wahoo {
 	return &wh
 }
 
+func (w *Wahoo) SetBearerToken(token string) *Wahoo {
+	header := gohttp.NewBearerToken(token)
+	header["Content-Type"] = "application/json"
+
+	goHTTP := gohttp.New(&gohttp.Config{BaseURL: w.baseURL, Header: header})
+	w.goHTTP = goHTTP
+
+	return w
+}
+
 func (w *Wahoo) SetRedirectURI(uri string) *Wahoo {
 	w.redirectURL = uri
 
@@ -202,4 +212,21 @@ func (w *Wahoo) getScopeParam() string {
 	scopes = strings.ReplaceAll(scopes, " ", "%20")
 
 	return scopes
+}
+
+func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RequestError) {
+	workoutsURL := fmt.Sprintf("v1/workouts?page=%d&limit=%d", page, limit)
+
+	w.SetBearerToken(token)
+
+	resp, err := w.goHTTP.Get(workoutsURL)
+	if err != nil {
+		return nil, NewError(err, 500, "failed to get all workout")
+	}
+
+	if resp.Code != 200 {
+		return nil, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+	}
+
+	return UnmarshalToWorkoutsResponse(resp.Data)
 }

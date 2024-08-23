@@ -24,4 +24,5 @@ var (
 	ErrFailedToGetAccessToken = errors.New("failed to get access token")
 	ErrInvalidRefreshToken    = errors.New("invalid refresh token")
 	ErrInvalidCode            = errors.New("invalid code")
+	ErrGetAllWorkout          = errors.New("failed to get all workout")
 )
