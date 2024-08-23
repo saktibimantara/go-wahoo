@@ -44,12 +44,12 @@ func TestWahoo_GetAccessToken(t *testing.T) {
 	w := mocks.IWahoo{}
 
 	w.On("GetAccessToken", "abcdfsd").Return(&go_wahoo.TokenResponse{
-		"9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
-		"Bearer",
-		7199,
-		"yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
-		"user_read",
-		1721808795,
+		AccessToken:  "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
+		TokenType:    "Bearer",
+		ExpiresIn:    7199,
+		RefreshToken: "yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
+		Scope:        "user_read",
+		CreatedAt:    1721808795,
 	}, nil)
 
 	w.On("GetAccessToken", "badCode").Return(nil, &go_wahoo.RequestError{
@@ -82,12 +82,12 @@ func TestWahoo_GetRefreshToken(t *testing.T) {
 	w := mocks.IWahoo{}
 
 	w.On("RefreshToken", "refresh_001").Return(&go_wahoo.TokenResponse{
-		"9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
-		"Bearer",
-		7199,
-		"yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
-		"user_read",
-		1721808795,
+		AccessToken:  "9IGrKxQKfhwld32SFv9nCRT3jptoAmshINrFEpQZ7Kw",
+		TokenType:    "Bearer",
+		ExpiresIn:    7199,
+		RefreshToken: "yOXxKK2p90C1H5P0EKuBciv3vNesptYMfGzUwTR5MMg",
+		Scope:        "user_read",
+		CreatedAt:    1721808795,
 	}, nil)
 
 	w.On("RefreshToken", "badRefreshToken").Return(nil, &go_wahoo.RequestError{
