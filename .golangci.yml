@@ -27,7 +27,7 @@ linters-settings:
     rules:
       - name: 'var-naming'
         arguments:
-          - []
+          - ["ID", "URL"]
           - []
           - - skipPackageNameChecks: true
 
