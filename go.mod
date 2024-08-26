@@ -3,7 +3,7 @@ module github.com/saktibimantara/go-wahoo
 go 1.22.0
 
 require (
-	github.com/saktibimantara/go-http v0.0.3
+	github.com/saktibimantara/go-http v0.0.4
 	github.com/stretchr/testify v1.9.0
 )
 

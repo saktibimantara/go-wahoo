@@ -4,6 +4,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/saktibimantara/go-http v0.0.3 h1:/6LIxeUsfpDNXnZ/TIxz1ya/fnlsZq3LE1Qg391bt9I=
 github.com/saktibimantara/go-http v0.0.3/go.mod h1:7o5nLUtFLy9cmUlWPwKRp7S5L+Oe0+RBQ95a4mFCHi0=
+github.com/saktibimantara/go-http v0.0.4 h1:StjUohpCkNW8jc+P2UXg/KbEbLWspqjRMYa0UqvugK8=
+github.com/saktibimantara/go-http v0.0.4/go.mod h1:7o5nLUtFLy9cmUlWPwKRp7S5L+Oe0+RBQ95a4mFCHi0=
 github.com/stretchr/objx v0.5.2 h1:xuMeJ0Sdp5ZMRXx/aWO6RZxdr3beISkG5/G/aIRr3pY=
 github.com/stretchr/objx v0.5.2/go.mod h1:FRsXN1f5AsAjCGJKqEizvkpNtU+EGNCLh3NxZ/8L+MA=
 github.com/stretchr/testify v1.9.0 h1:HtqpIVDClZ4nwg75+f6Lvsy/wHu+3BoSGCbBAcpTsTg=
