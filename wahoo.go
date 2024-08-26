@@ -233,7 +233,7 @@ func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsRespo
 }
 
 func (w *Wahoo) DeAuthorize(token string) *RequestError {
-	deAuthorizeURL := w.baseURL + "v1/permissions"
+	deAuthorizeURL := w.baseURL + "/v1/permissions"
 
 	w.SetBearerToken(token)
 
