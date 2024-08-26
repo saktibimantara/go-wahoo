@@ -216,7 +216,7 @@ func (w *Wahoo) getScopeParam() string {
 }
 
 func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RequestError) {
-	workoutsURL := fmt.Sprintf("v1/workouts?page=%d&limit=%d", page, limit)
+	workoutsURL := fmt.Sprintf("%s/v1/workouts?page=%d&limit=%d", w.baseURL, page, limit)
 
 	w.SetBearerToken(token)
 
@@ -233,7 +233,7 @@ func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsRespo
 }
 
 func (w *Wahoo) DeAuthorize(token string) *RequestError {
-	deAuthorizeURL := "v1/permissions"
+	deAuthorizeURL := w.baseURL + "v1/permissions"
 
 	w.SetBearerToken(token)
 

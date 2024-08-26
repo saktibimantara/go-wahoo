@@ -1,4 +1,4 @@
 # Changelogs
 
-- Implement DeAuthorize API
+- Fix base URL for DeAuthorize and GetAllWorkout
   
