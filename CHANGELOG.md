@@ -1,4 +1,4 @@
 # Changelogs
 
-- Implement Get All Workout API 
+- Implement DeAuthorize API
   

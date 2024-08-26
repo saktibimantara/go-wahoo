@@ -231,3 +231,20 @@ func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsRespo
 
 	return UnmarshalToWorkoutsResponse(resp.Data)
 }
+
+func (w *Wahoo) DeAuthorize(token string) *RequestError {
+	deAuthorizeURL := "v1/permissions"
+
+	w.SetBearerToken(token)
+
+	resp, err := w.goHTTP.Delete(deAuthorizeURL)
+	if err != nil {
+		return NewError(err, 500, "failed to deAuthorize")
+	}
+
+	if resp.Code != 200 {
+		return NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+	}
+
+	return nil
+}
