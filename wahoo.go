@@ -186,7 +186,7 @@ func (w *Wahoo) validateRefreshTokenRequest(refreshToken string) error {
 }
 
 func (w *Wahoo) getClientParams() string {
-	return fmt.Sprintf("client_id=%s&client_secret=%s", w.clientID, w.clientSecret)
+	return fmt.Sprintf("client_id=%s", w.clientID)
 }
 
 func (w *Wahoo) getRedirectParam(uniqueCode string) string {
