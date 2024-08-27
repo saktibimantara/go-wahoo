@@ -9,7 +9,7 @@ import (
 
 func TestWahoo_GetAuthenticateURL(t *testing.T) {
 
-	iface := go_wahoo.NewWahoo("aaa", "bbb").SetScopes(go_wahoo.Email, go_wahoo.UserRead, go_wahoo.WorkoutsRead).SetRedirectURI("ccc.com")
+	iface := go_wahoo.NewWahoo("aaaa", "bbb").SetScopes(go_wahoo.UserRead, go_wahoo.WorkoutsRead, go_wahoo.OfflineData, go_wahoo.PowerZonesRead, go_wahoo.PlansRead).SetRedirectURI("https://site.com/api/v1/wahoo/exchange_token?unique_code=01HWZAN26SDAB3XQJEQHCGWG1H")
 
 	tests := []struct {
 		name    string
@@ -21,7 +21,7 @@ func TestWahoo_GetAuthenticateURL(t *testing.T) {
 			name:    "Test Case 1",
 			want:    nil,
 			wahoo:   iface,
-			wantURL: "https://api.wahooligan.com/oauth/authorize?client_id=aaa&scope=email+user_read+workouts_read&redirect_uri=ccc.com%3Funique_code=123&response_type=code",
+			wantURL: "https://api.wahooligan.com/oauth/authorize?client_id=aaaa&scope=user_read+workouts_read+offline_data+power_zones_read+plans_read&redirect_uri=https:%2F%2Fsite.com%2Fapi%2Fv1%2Fwahoo%2Fexchange_token%3Funique_code=01HWZAN26SDAB3XQJEQHCGWG1H%3Funique_code=123&response_type=code",
 		},
 	}
 	for _, tt := range tests {
