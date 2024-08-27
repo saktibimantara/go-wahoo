@@ -195,7 +195,7 @@ func (w *Wahoo) getRedirectParam(uniqueCode string) string {
 }
 
 func (w *Wahoo) getScopeParam() string {
-	scopes := "scopes="
+	scopes := "scope="
 
 	if len(w.scopes) == 0 {
 		return ""
@@ -216,7 +216,7 @@ func (w *Wahoo) getScopeParam() string {
 }
 
 func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RequestError) {
-	workoutsURL := fmt.Sprintf("%s/v1/workouts?page=%d&limit=%d", w.baseURL, page, limit)
+	workoutsURL := fmt.Sprintf("/v1/workouts?page=%d&limit=%d", page, limit)
 
 	w.SetBearerToken(token)
 
@@ -242,8 +242,10 @@ func (w *Wahoo) DeAuthorize(token string) *RequestError {
 		return NewError(err, 500, "failed to deAuthorize")
 	}
 
+	fmt.Println("resp: ", string(resp.Data))
+
 	if resp.Code != 200 {
-		return NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+		return NewError(ErrDeAuthorize, resp.Code, string(resp.Data))
 	}
 
 	return nil
