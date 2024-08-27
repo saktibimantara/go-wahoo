@@ -21,7 +21,7 @@ func TestWahoo_GetAuthenticateURL(t *testing.T) {
 			name:    "Test Case 1",
 			want:    nil,
 			wahoo:   iface,
-			wantURL: "https://api.wahooligan.com/oauth/authorize?client_id=aaa&client_secret=bbb&scope=email%20user_read%20workouts_read&redirect_uri=ccc.com?unique_code=123&response_type=code",
+			wantURL: "https://api.wahooligan.com/oauth/authorize?client_id=aaa&client_secret=bbb&scope=email+user_read+workouts_read&redirect_uri=ccc.com%3Funique_code=123&response_type=code",
 		},
 	}
 	for _, tt := range tests {

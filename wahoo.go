@@ -2,9 +2,8 @@ package go_wahoo
 
 import (
 	"fmt"
-	"strings"
-
 	gohttp "github.com/saktibimantara/go-http"
+	"net/url"
 )
 
 type OAuth2Scope string
@@ -86,7 +85,7 @@ func (w *Wahoo) GetAccessToken(code, uniqueCode string) (*TokenResponse, *Reques
 	}
 
 	// buildAccessTokenURL
-	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), code)
+	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s&scopes=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), code, w.getScopeParam())
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(accessTokenURL, nil)
@@ -191,7 +190,10 @@ func (w *Wahoo) getClientParams() string {
 }
 
 func (w *Wahoo) getRedirectParam(uniqueCode string) string {
-	return "redirect_uri=" + w.redirectURL + "?unique_code=" + uniqueCode
+	urlStr := "redirect_uri=" + w.redirectURL + "?unique_code=" + uniqueCode
+
+	// encode the url
+	return url.PathEscape(urlStr)
 }
 
 func (w *Wahoo) getScopeParam() string {
@@ -205,12 +207,9 @@ func (w *Wahoo) getScopeParam() string {
 		if i == 0 {
 			scopes += string(scope)
 		} else {
-			scopes += " " + string(scope)
+			scopes += "+" + string(scope)
 		}
 	}
-
-	// replace space with %20 since URL.ParseQuery will parse space as +
-	scopes = strings.ReplaceAll(scopes, " ", "%20")
 
 	return scopes
 }
