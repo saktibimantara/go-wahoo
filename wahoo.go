@@ -90,7 +90,7 @@ func (w *Wahoo) GetAccessToken(code, uniqueCode string) (*TokenResponse, *Reques
 	}
 
 	// buildAccessTokenURL
-	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s&scopes=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), code, w.getScopeParam())
+	accessTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=authorization_code&code=%s&scopes=%s", w.baseURL, w.getAuthorizationClientParam(), w.getRedirectParam(uniqueCode), code, w.getScopeParam())
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(accessTokenURL, nil)
@@ -117,7 +117,7 @@ func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *
 	}
 
 	// buildAccessTokenURL
-	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getClientParams(), w.getRedirectParam(uniqueCode), refreshToken)
+	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getAuthorizationClientParam(), w.getRedirectParam(uniqueCode), refreshToken)
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(refreshTokenURL, nil)
@@ -188,6 +188,14 @@ func (w *Wahoo) validateRefreshTokenRequest(refreshToken string) error {
 	}
 
 	return nil
+}
+
+func (w *Wahoo) getAuthorizationClientParam() string {
+	return w.getClientParams() + "&" + w.getClientSecretParams()
+}
+
+func (w *Wahoo) getClientSecretParams() string {
+	return "client_secret=" + w.clientSecret
 }
 
 func (w *Wahoo) getClientParams() string {
