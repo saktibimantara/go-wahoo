@@ -2,19 +2,24 @@ package go_wahoo
 
 import (
 	"fmt"
-	gohttp "github.com/saktibimantara/go-http"
 	"net/url"
+
+	gohttp "github.com/saktibimantara/go-http"
 )
 
 type OAuth2Scope string
 
 const (
-	Email         OAuth2Scope = "email"
-	UserRead      OAuth2Scope = "user_read"
-	UserWrite     OAuth2Scope = "user_write"
-	WorkoutsRead  OAuth2Scope = "workouts_read"
-	WorkoutsWrite OAuth2Scope = "workouts_write"
-	OfflineData   OAuth2Scope = "offline_data"
+	Email           OAuth2Scope = "email"
+	UserRead        OAuth2Scope = "user_read"
+	UserWrite       OAuth2Scope = "user_write"
+	WorkoutsRead    OAuth2Scope = "workouts_read"
+	WorkoutsWrite   OAuth2Scope = "workouts_write"
+	OfflineData     OAuth2Scope = "offline_data"
+	PowerZonesRead  OAuth2Scope = "power_zones_read"
+	PowerZonesWrite OAuth2Scope = "power_zones_write"
+	PlansRead       OAuth2Scope = "plans_read"
+	PlansWrite      OAuth2Scope = "plans_write"
 )
 
 // Wahoo represents a struct with a baseURL field
@@ -186,7 +191,7 @@ func (w *Wahoo) validateRefreshTokenRequest(refreshToken string) error {
 }
 
 func (w *Wahoo) getClientParams() string {
-	return fmt.Sprintf("client_id=%s", w.clientID)
+	return "client_id=" + w.clientID
 }
 
 func (w *Wahoo) getRedirectParam(uniqueCode string) string {
