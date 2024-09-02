@@ -6,4 +6,5 @@ type IWahoo interface {
 	RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *RequestError)
 	GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RequestError)
 	DeAuthorize(token string) *RequestError
+	GetUser(token string) (*User, *RequestError)
 }

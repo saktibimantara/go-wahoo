@@ -14,6 +14,19 @@ type TokenResponse struct {
 	CreatedAt    int64  `json:"created_at"`
 }
 
+type User struct {
+	Id        int       `json:"id"`
+	Height    string    `json:"height"`
+	Weight    string    `json:"weight"`
+	First     string    `json:"first"`
+	Last      string    `json:"last"`
+	Email     string    `json:"email"`
+	Birth     string    `json:"birth"`
+	Gender    int       `json:"gender"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
 type WorkoutsResponse struct {
 	Workouts []Workout `json:"workouts"`
 	Total    int       `json:"total"`
@@ -67,6 +80,16 @@ type ITokenResponse interface {
 	GetRefreshToken() string
 	GetScope() string
 	GetCreatedAt() time.Time
+}
+
+func UnmarshalResponse(model interface{}, data []byte) *RequestError {
+	err := json.Unmarshal(data, model)
+
+	if err != nil {
+		return NewError(err, 500, "failed to unmarshal response")
+	}
+
+	return nil
 }
 
 func UnmarshalToWorkoutsResponse(data []byte) (*WorkoutsResponse, *RequestError) {

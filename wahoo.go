@@ -138,6 +138,26 @@ func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *
 	return UnmarshalToResponse(resp.Data)
 }
 
+func (w *Wahoo) GetUser(token string) (*User, *RequestError) {
+	userURL := "/v1/user"
+
+	w.SetBearerToken(token)
+
+	resp, err := w.goHTTP.Get(userURL)
+	if err != nil {
+		return nil, NewError(err, 500, "failed to get user")
+	}
+
+	if resp.Code != 200 {
+		return nil, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+	}
+
+	var user User
+	errUnmarshal := UnmarshalResponse(&user, resp.Data)
+
+	return &user, errUnmarshal
+}
+
 func (w *Wahoo) validateAccessTokenRequest(code string) error {
 	if code == "" {
 		return ErrInvalidCode
