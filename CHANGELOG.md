@@ -1,4 +1,4 @@
 # Changelogs
 
-- Fix base URL for DeAuthorize and GetAllWorkout
+- Add Rate Limit response headers to the response object
   

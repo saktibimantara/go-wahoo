@@ -2,6 +2,9 @@ package go_wahoo
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -73,6 +76,14 @@ type WorkoutFile struct {
 	Url string `json:"url"`
 }
 
+type RateLimit struct {
+	Limit             string    `json:"limit"`
+	Remaining5Minutes int       `json:"remaining5Minutes"`
+	Remaining1Hour    int       `json:"remaining1Hour"`
+	Remaining1Day     int       `json:"remaining1Day"`
+	ResetAt           time.Time `json:"reset"`
+}
+
 type ITokenResponse interface {
 	GetAccessToken() string
 	GetTokenType() string
@@ -80,6 +91,30 @@ type ITokenResponse interface {
 	GetRefreshToken() string
 	GetScope() string
 	GetCreatedAt() time.Time
+}
+
+func NewRateLimit(header http.Header) *RateLimit {
+
+	headerRemaining := header.Get("X-Ratelimit-Remaining")
+	remaining := strings.Split(headerRemaining, ", ")
+	resetInSecond := safeInt(header.Get("X-Ratelimit-Reset"))
+
+	return &RateLimit{
+		Limit:             header.Get("X-Ratelimit-Limit"),
+		Remaining1Day:     safeInt(remaining[0]),
+		Remaining1Hour:    safeInt(remaining[1]),
+		Remaining5Minutes: safeInt(remaining[2]),
+		ResetAt:           time.Now().Add(time.Duration(resetInSecond) * time.Second),
+	}
+}
+
+func safeInt(value string) (retVal int) {
+	if value == "" {
+		return 0
+	}
+
+	retVal, _ = strconv.Atoi(value)
+	return
 }
 
 func UnmarshalResponse(model interface{}, data []byte) *RequestError {
@@ -90,17 +125,6 @@ func UnmarshalResponse(model interface{}, data []byte) *RequestError {
 	}
 
 	return nil
-}
-
-func UnmarshalToWorkoutsResponse(data []byte) (*WorkoutsResponse, *RequestError) {
-	var resp WorkoutsResponse
-	err := json.Unmarshal(data, &resp)
-
-	if err != nil {
-		return nil, NewError(err, 500, "failed to unmarshal response")
-	}
-
-	return &resp, nil
 }
 
 func UnmarshalToResponse(data []byte) (*TokenResponse, *RequestError) {

@@ -111,9 +111,9 @@ func (w *Wahoo) GetAccessToken(code, uniqueCode string) (*TokenResponse, *Reques
 	return UnmarshalToResponse(resp.Data)
 }
 
-func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *RequestError) {
+func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *RateLimit, *RequestError) {
 	if err := w.validateRefreshTokenRequest(refreshToken); err != nil {
-		return nil, NewError(err, 400, "Invalid Request")
+		return nil, nil, NewError(err, 400, "Invalid Request")
 	}
 
 	// buildAccessTokenURL
@@ -122,40 +122,47 @@ func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *
 	// request to get access token
 	resp, err := w.goHTTP.Post(refreshTokenURL, nil)
 	if err != nil {
-		return nil, NewError(err, 500, "failed to get access token")
+		return nil, nil, NewError(err, 500, "failed to get access token")
 	}
 
 	respMessage := string(resp.Data)
 
+	rateLimit := NewRateLimit(resp.Header)
+
 	if resp.Code != 200 {
-		return nil, NewError(ErrFailedToGetAccessToken, resp.Code, respMessage)
+		return nil, rateLimit, NewError(ErrFailedToGetAccessToken, resp.Code, respMessage)
 	}
 
 	if resp.Data == nil {
-		return nil, NewError(ErrFailedToGetAccessToken, 500, "failed to get access token")
+		return nil, rateLimit, NewError(ErrFailedToGetAccessToken, 500, "failed to get access token")
 	}
 
-	return UnmarshalToResponse(resp.Data)
+	var token TokenResponse
+
+	errUnmarshal := UnmarshalResponse(&token, resp.Data)
+	return &token, rateLimit, errUnmarshal
 }
 
-func (w *Wahoo) GetUser(token string) (*User, *RequestError) {
+func (w *Wahoo) GetUser(token string) (*User, *RateLimit, *RequestError) {
 	userURL := "/v1/user"
 
 	w.SetBearerToken(token)
 
 	resp, err := w.goHTTP.Get(userURL)
 	if err != nil {
-		return nil, NewError(err, 500, "failed to get user")
+		return nil, nil, NewError(err, 500, "failed to get user")
 	}
 
+	rateLimit := NewRateLimit(resp.Header)
+
 	if resp.Code != 200 {
-		return nil, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+		return nil, rateLimit, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
 	}
 
 	var user User
 	errUnmarshal := UnmarshalResponse(&user, resp.Data)
 
-	return &user, errUnmarshal
+	return &user, rateLimit, errUnmarshal
 }
 
 func (w *Wahoo) validateAccessTokenRequest(code string) error {
@@ -247,38 +254,43 @@ func (w *Wahoo) getScopeParam() string {
 	return scopes
 }
 
-func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RequestError) {
+func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RateLimit, *RequestError) {
 	workoutsURL := fmt.Sprintf("/v1/workouts?page=%d&limit=%d", page, limit)
 
 	w.SetBearerToken(token)
 
 	resp, err := w.goHTTP.Get(workoutsURL)
 	if err != nil {
-		return nil, NewError(err, 500, "failed to get all workout")
+		return nil, nil, NewError(err, 500, "failed to get all workout")
 	}
+
+	rateLimit := NewRateLimit(resp.Header)
 
 	if resp.Code != 200 {
-		return nil, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
+		return nil, rateLimit, NewError(ErrGetAllWorkout, resp.Code, string(resp.Data))
 	}
 
-	return UnmarshalToWorkoutsResponse(resp.Data)
+	var workouts WorkoutsResponse
+	errUnmarshal := UnmarshalResponse(&workouts, resp.Data)
+
+	return &workouts, rateLimit, errUnmarshal
 }
 
-func (w *Wahoo) DeAuthorize(token string) *RequestError {
+func (w *Wahoo) DeAuthorize(token string) (*RateLimit, *RequestError) {
 	deAuthorizeURL := w.baseURL + "/v1/permissions"
 
 	w.SetBearerToken(token)
 
 	resp, err := w.goHTTP.Delete(deAuthorizeURL)
 	if err != nil {
-		return NewError(err, 500, "failed to deAuthorize")
+		return nil, NewError(err, 500, "failed to deAuthorize")
 	}
 
-	fmt.Println("resp: ", string(resp.Data))
+	rateLimit := NewRateLimit(resp.Header)
 
 	if resp.Code != 200 {
-		return NewError(ErrDeAuthorize, resp.Code, string(resp.Data))
+		return rateLimit, NewError(ErrDeAuthorize, resp.Code, string(resp.Data))
 	}
 
-	return nil
+	return rateLimit, nil
 }
