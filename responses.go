@@ -96,8 +96,15 @@ type ITokenResponse interface {
 func NewRateLimit(header http.Header) *RateLimit {
 
 	headerRemaining := header.Get("X-Ratelimit-Remaining")
+	if headerRemaining == "" {
+		return nil
+	}
 	remaining := strings.Split(headerRemaining, ", ")
 	resetInSecond := safeInt(header.Get("X-Ratelimit-Reset"))
+
+	if len(remaining) != 3 {
+		return nil
+	}
 
 	return &RateLimit{
 		Limit:             header.Get("X-Ratelimit-Limit"),
