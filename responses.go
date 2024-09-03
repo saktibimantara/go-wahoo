@@ -40,16 +40,16 @@ type WorkoutsResponse struct {
 }
 
 type Workout struct {
-	Id             int            `json:"id"`
-	Starts         time.Time      `json:"starts"`
-	Minutes        int            `json:"minutes"`
-	Name           string         `json:"name"`
-	PlanId         *int           `json:"plan_id"`
-	WorkoutToken   string         `json:"workout_token"`
-	WorkoutTypeId  int            `json:"workout_type_id"`
-	WorkoutSummary WorkoutSummary `json:"workout_summary"`
-	CreatedAt      time.Time      `json:"created_at"`
-	UpdatedAt      time.Time      `json:"updated_at"`
+	Id             int             `json:"id"`
+	Starts         time.Time       `json:"starts"`
+	Minutes        int             `json:"minutes"`
+	Name           string          `json:"name"`
+	PlanId         *int            `json:"plan_id"`
+	WorkoutToken   string          `json:"workout_token"`
+	WorkoutTypeId  int             `json:"workout_type_id"`
+	WorkoutSummary *WorkoutSummary `json:"workout_summary"`
+	CreatedAt      time.Time       `json:"created_at"`
+	UpdatedAt      time.Time       `json:"updated_at"`
 }
 
 type WorkoutSummary struct {
