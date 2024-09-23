@@ -1,4 +1,4 @@
 # Changelogs
 
-- Add Rate Limit response headers to the response object
+- Remove redirect URI from the refresh token
   

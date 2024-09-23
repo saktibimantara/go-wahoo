@@ -117,7 +117,7 @@ func (w *Wahoo) RefreshToken(refreshToken, uniqueCode string) (*TokenResponse, *
 	}
 
 	// buildAccessTokenURL
-	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getAuthorizationClientParam(), w.getRedirectParam(uniqueCode), refreshToken)
+	refreshTokenURL := fmt.Sprintf("%s/oauth/token?%s&grant_type=refresh_token&refresh_token=%s", w.baseURL, w.getAuthorizationClientParam(), refreshToken)
 
 	// request to get access token
 	resp, err := w.goHTTP.Post(refreshTokenURL, nil)

@@ -1,6 +1,7 @@
 package go_wahoo
 
 import (
+	"fmt"
 	gohttp "github.com/saktibimantara/go-http"
 	"net/url"
 	"testing"
@@ -107,4 +108,34 @@ func TestWahoo_getScopeParam(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestWahoo(t *testing.T) {
+	iface := NewWahoo("9F7GT9plmXV393jecMI5hpJg7953JLBPXTmSpQ5OFEI", "HQE-wMqpKws4b5lJy33EZzr8x_jguPs36UUefnqkmrU")
+	iface.SetScopes(UserRead, WorkoutsRead, OfflineData, PowerZonesRead)
+	iface.SetRedirectURI("https://champion-buck-pet.ngrok-free.app/api/v1/wahoo/exchange_token")
+
+	//authenticateURL, err := iface.GetAuthenticateURL("123-onboarding")
+	//if err != nil {
+	//	return
+	//}
+	//
+	//fmt.Println(*authenticateURL)
+
+	//access, err := iface.GetAccessToken("UjONcvdRHeZ8XKODBYT2wFNr9s_3ST65-rTrMOlRBdw", "123-onboarding")
+	//if err != nil {
+	//	return
+	//}
+	//
+	//fmt.Printf("Access: %v\n", *access)
+
+	token, _, err := iface.RefreshToken("Qm74UB4_pbR8ZWHjl_ekjAjUEVgeNr910-j8oanc0mE", "123")
+	if err != nil {
+		return
+	}
+
+	fmt.Printf("Token: %v\n", *token)
+
+	//{ESXjiRVX9CKBgEVwN917jJk7iMpVVNZBMh2xgrhJl94 Bearer 7199 jEue3OSJwF-obYKcVi-atmtCAnGqtir_4nH8FE5OrcA user_read workouts_read offline_data power_zones_read 1727064420}
+
 }
