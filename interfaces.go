@@ -7,4 +7,5 @@ type IWahoo interface {
 	GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RateLimit, *RequestError)
 	DeAuthorize(token string) (*RateLimit, *RequestError)
 	GetUser(token string) (*User, *RateLimit, *RequestError)
+	WorkoutFileUpload(token string, workoutFile []byte) (*WorkoutFileUploadResponse, *RateLimit, *RequestError)
 }
