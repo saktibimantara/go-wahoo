@@ -26,4 +26,5 @@ var (
 	ErrInvalidCode            = errors.New("invalid code")
 	ErrGetAllWorkout          = errors.New("failed to get all workout")
 	ErrDeAuthorize            = errors.New("failed to deauthorize")
+	ErrWorkoutFileUpload      = errors.New("failed to upload workout file")
 )

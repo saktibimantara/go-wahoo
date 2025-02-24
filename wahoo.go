@@ -1,6 +1,7 @@
 package go_wahoo
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/url"
 
@@ -252,6 +253,35 @@ func (w *Wahoo) getScopeParam() string {
 	}
 
 	return scopes
+}
+
+func (w *Wahoo) WorkoutFileUpload(token string, workoutFile []byte) (*WorkoutFileUploadResponse, *RateLimit, *RequestError) {
+	workoutFileURL := "/v1/workout_file_uploads"
+
+	// base64 encode the workout file
+	workoutFileBase64 := base64.StdEncoding.EncodeToString(workoutFile)
+
+	body := gohttp.Body{
+		"file": workoutFileBase64,
+	}
+
+	w.SetBearerToken(token)
+
+	resp, err := w.goHTTP.Post(workoutFileURL, body)
+	if err != nil {
+		return nil, nil, NewError(err, 500, "failed to upload workout file")
+	}
+
+	rateLimit := NewRateLimit(resp.Header)
+
+	if resp.Code != 200 {
+		return nil, rateLimit, NewError(ErrWorkoutFileUpload, resp.Code, string(resp.Data))
+	}
+
+	var workoutFileUploadResponse WorkoutFileUploadResponse
+	errUnmarshal := UnmarshalResponse(&workoutFileUploadResponse, resp.Data)
+
+	return &workoutFileUploadResponse, rateLimit, errUnmarshal
 }
 
 func (w *Wahoo) GetAllWorkout(token string, page int, limit int) (*WorkoutsResponse, *RateLimit, *RequestError) {

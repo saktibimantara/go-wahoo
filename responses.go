@@ -39,6 +39,17 @@ type WorkoutsResponse struct {
 	Sort     string    `json:"sort"`
 }
 
+type WorkoutFileUploadResponse struct {
+	Id            int       `json:"id"`
+	Starts        time.Time `json:"starts"`
+	Minutes       int       `json:"minutes"`
+	Name          string    `json:"name"`
+	PlanId        int       `json:"plan_id"`
+	WorkoutTypeId int       `json:"workout_type_id"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
+}
+
 type Workout struct {
 	Id             int             `json:"id"`
 	Starts         time.Time       `json:"starts"`
@@ -94,7 +105,6 @@ type ITokenResponse interface {
 }
 
 func NewRateLimit(header http.Header) *RateLimit {
-
 	headerRemaining := header.Get("X-Ratelimit-Remaining")
 	if headerRemaining == "" {
 		return nil
@@ -126,7 +136,6 @@ func safeInt(value string) (retVal int) {
 
 func UnmarshalResponse(model interface{}, data []byte) *RequestError {
 	err := json.Unmarshal(data, model)
-
 	if err != nil {
 		return NewError(err, 500, "failed to unmarshal response")
 	}
@@ -137,7 +146,6 @@ func UnmarshalResponse(model interface{}, data []byte) *RequestError {
 func UnmarshalToResponse(data []byte) (*TokenResponse, *RequestError) {
 	var resp TokenResponse
 	err := json.Unmarshal(data, &resp)
-
 	if err != nil {
 		return nil, NewError(err, 500, "failed to unmarshal response")
 	}

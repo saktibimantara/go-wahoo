@@ -1,9 +1,10 @@
 package go_wahoo
 
 import (
-	gohttp "github.com/saktibimantara/go-http"
 	"net/url"
 	"testing"
+
+	gohttp "github.com/saktibimantara/go-http"
 )
 
 func TestWahoo_getRedirectParam(t *testing.T) {
@@ -136,5 +137,4 @@ func TestWahoo(t *testing.T) {
 	//fmt.Printf("Token: %v\n", *token)
 
 	//{ESXjiRVX9CKBgEVwN917jJk7iMpVVNZBMh2xgrhJl94 Bearer 7199 jEue3OSJwF-obYKcVi-atmtCAnGqtir_4nH8FE5OrcA user_read workouts_read offline_data power_zones_read 1727064420}
-
 }
